@@ -22,7 +22,11 @@ export default function TodoList() {
     setIsMounted(true);
     const savedTasks = localStorage.getItem("tasks");
     if (savedTasks) {
-      setTasks(JSON.parse(savedTasks) as Task[]);
+      try {
+        setTasks(JSON.parse(savedTasks) as Task[]);
+      } catch (error) {
+        console.error("Failed to parse tasks from localStorage", error);
+      }
     }
   }, []);
 
@@ -36,9 +40,8 @@ export default function TodoList() {
     if (newTask.trim() !== "") {
       setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
       setNewTask("");
-    }
-    else {
-      alert("Please enter a task !");
+    } else {
+      alert("Please enter a task!");
     }
   };
 
@@ -79,11 +82,11 @@ export default function TodoList() {
     <div
       className="flex flex-col items-center justify-center h-screen mb-4 sm:mb-0 bg-gray-100 dark:bg-gray-900 bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('./Bg-img.jpg')",
+        backgroundImage: "url('/Bg-img.jpg')", // Updated image path
       }}
     >
       <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-        <h1 className=" ml-36 text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+        <h1 className="ml-36 text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
           Todo List
         </h1>
         <div className="flex items-center mb-4">
@@ -96,13 +99,14 @@ export default function TodoList() {
           />
           <Button
             onClick={addTask}
-
             className="bg-black hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md"
           >
             Add
           </Button>
         </div>
-        <h1 className="flex flex-col items-center mt-5 pb-5">&copy; 2024 | Build With❤️by Muhammad Annas</h1>
+        <h1 className="flex flex-col items-center mt-5 pb-5">
+          &copy; 2024 | Built With ❤️ by Muhammad Annas
+        </h1>
         <div className="space-y-2">
           {tasks.map((task) => (
             <div
@@ -129,9 +133,7 @@ export default function TodoList() {
                   />
                 ) : (
                   <span
-                    className={`flex-1 text-gray-800 dark:text-gray-200 ${task.completed
-                      ? "line-through text-gray-500 dark:text-gray-400"
-                      : ""
+                    className={`flex-1 text-gray-800 dark:text-gray-200 ${task.completed ? "line-through text-gray-500 dark:text-gray-400" : ""
                       }`}
                   >
                     {task.text}
